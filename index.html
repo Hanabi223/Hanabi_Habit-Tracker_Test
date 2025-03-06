@@ -3,62 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monthly Habit Tracker</title>
+    <title>Multi-Habit Tracker</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f5f5f5;
         }
+        .tracker-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .habit {
+            margin-bottom: 20px;
+        }
         .tracker {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
-            max-width: 400px;
-            margin: 20px auto;
-            background: white;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
         }
         .day {
-            padding: 15px;
+            padding: 10px;
             background: #ddd;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
         }
         .completed {
-            background: #92ADA4 !important;
+            background: #DAA38F !important;
             color: white;
         }
     </style>
 </head>
 <body>
-    <h1>March 2025 Habit Tracker</h1>
-    <div class="tracker" id="tracker"></div>
+    <h1>March 2025 Multi-Habit Tracker</h1>
+    <div class="tracker-container" id="tracker-container"></div>
     
     <script>
-        const tracker = document.getElementById("tracker");
+        const habits = ["Exercise", "Read", "Ate Healthy"];
         const daysInMonth = new Date(2025, 3, 0).getDate();
+        const trackerContainer = document.getElementById("tracker-container");
         
-        for (let i = 1; i <= daysInMonth; i++) {
-            const day = document.createElement("div");
-            day.classList.add("day");
-            day.textContent = i;
+        habits.forEach(habit => {
+            const habitDiv = document.createElement("div");
+            habitDiv.classList.add("habit");
+            habitDiv.innerHTML = `<h2>${habit}</h2>`;
             
-            // Load saved state
-            if (localStorage.getItem(`habit-${i}`) === "completed") {
-                day.classList.add("completed");
+            const tracker = document.createElement("div");
+            tracker.classList.add("tracker");
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                const day = document.createElement("div");
+                day.classList.add("day");
+                day.textContent = i;
+                
+                const storageKey = `habit-${habit}-${i}`;
+                if (localStorage.getItem(storageKey) === "completed") {
+                    day.classList.add("completed");
+                }
+                
+                day.addEventListener("click", () => {
+                    day.classList.toggle("completed");
+                    localStorage.setItem(storageKey, day.classList.contains("completed") ? "completed" : "");
+                });
+                
+                tracker.appendChild(day);
             }
             
-            day.addEventListener("click", () => {
-                day.classList.toggle("completed");
-                localStorage.setItem(`habit-${i}`, day.classList.contains("completed") ? "completed" : "");
-            });
-            
-            tracker.appendChild(day);
-        }
+            habitDiv.appendChild(tracker);
+            trackerContainer.appendChild(habitDiv);
+        });
     </script>
 </body>
 </html>
