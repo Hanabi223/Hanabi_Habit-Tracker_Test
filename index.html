@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Habit Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        .tracker {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            max-width: 400px;
+            margin: 20px auto;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .day {
+            padding: 15px;
+            background: #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .completed {
+            background: #92ADA4 !important;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>March 2025 Habit Tracker</h1>
+    <div class="tracker" id="tracker"></div>
+    
+    <script>
+        const tracker = document.getElementById("tracker");
+        const daysInMonth = new Date(2025, 3, 0).getDate();
+        
+        for (let i = 1; i <= daysInMonth; i++) {
+            const day = document.createElement("div");
+            day.classList.add("day");
+            day.textContent = i;
+            
+            // Load saved state
+            if (localStorage.getItem(`habit-${i}`) === "completed") {
+                day.classList.add("completed");
+            }
+            
+            day.addEventListener("click", () => {
+                day.classList.toggle("completed");
+                localStorage.setItem(`habit-${i}`, day.classList.contains("completed") ? "completed" : "");
+            });
+            
+            tracker.appendChild(day);
+        }
+    </script>
+</body>
+</html>
